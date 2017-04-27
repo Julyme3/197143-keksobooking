@@ -1,97 +1,190 @@
 'use strict';
+
 var arrOfTitle = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
-var valueRandom = [];
-var tup = [];
-var opss = [1, 2, 3, 4, 5];
+var arrOfType = ['flat', 'house', 'bungalo'];
+var arrOfCheckin = ['12:00', '13:00', '14:00'];
+var arrOfCheckOut = ['12:00', '13:00', '14:00'];
+var minNumberImg = 1;
+var maxNumberImg = 8;
+var minPrice = 1000;
+var maxPrice = 1000000;
+var minRooms = 1;
+var maxRooms = 5;
 
-//var getRandom = function(arr) {
-//  for (var i = 0; i < arr.length; i++) {
-//  valueRandom = (Math.round(Math.random() * arr.length));
-////  console.log(arr[valueRandom[i]]);
-////  return valueRandom;
-//  }
-//};
-//
-//getRandom(arrOfTitle);
-
-//var getRandomLimit = function(min, max) {
-//    var valueRandomLimit = Math.round(Math.random() * (max - min) + min);
-//    return valueRandomLimit;
-//};
-//
-//var avatarOfAuthor = 'img/avatars/user{{0'+ getRandomLimit(1, 8) +'}}';
-//var getRandomUnique = function(arr) {
-//  var arrRandom = [];
-//  while (arrRandom <= arr.length) {
-//    var randomNumber = Math.floor(Math.random() * arr.length);
-//    if(arrRandom.indexOf(randomNumber) == -1) {
-//      arrRandom.push(randomNumber);
-//         console.log(arrRandom.length);
-//  }
-//}
-//}
-//getRandomUnique(arrOfTitle);
-
-//
-//var arry = []; //пустой массив, в который заносим рандомные числа
-//var ridi = function(max) {
-//  while (arry.length <= max.length) {
-//    var randomnumber = Math.floor(Math.random() * max.length);
-//    if(arry.indexOf(randomnumber) == -1) {
-//      arry.push(randomnumber);
-//       console.log(arry);
-//    }
-//  }
-//};
-//
-//ridi(opss);
-//var arr = [];
-//var rundomnumber;
-//var rind = function(max) {
-////  debugger;
-////записываем в этот массив рандомные числа
-//var max; // максимальная длина массива
-////  console.log(max);    //случайное число
-//while (arr.length <= max) {
-////  console.log(arr.length);
-//  rundomnumber = Math.round(Math.random() * max);
-//  if (arr.indexOf(rundomnumber) == -1) {
-//    arr.push(rundomnumber);
-////    console.log(rundomnumber);
-////    arr.length++;
-//  }
-//}
-//};
-//var line =
-//var avatarOfAuthor = 'img/avatars/user{{0'+ rind() +'}}';
-//rind(5);
-//console.log(arr);
-var chislo;
-var arr = [];
-var getRandom = function(massiv) {
-  while(arr.length <= massiv.length) {
-    chislo = Math.round(Math.random() * massiv.length);
-    if(arr.indexOf(chislo) == -1) {
-      arr.push(chislo);
-    }
-    return chislo;
-  }
-};
-
-getRandom(arrOfTitle);
-console.log(arrOfTitle[chislo]);
-
-var arrayy = [];
-var valueRandomLimit;
+// Функция для поиска случайного числа
 var getRandomLimit = function(min, max) {
-  debugger;
-  while(arrayy.length <= max) {
-    valueRandomLimit = (Math.round(Math.random() * (max - min) + min));
-    if(arrayy.indexOf(valueRandomLimit) == -1) {
-      arrayy.push(valueRandomLimit);
-    }
-//    return;
-  }
+  var numberRandomLimit = (Math.round(Math.random() * (max - min) + min));
+  return numberRandomLimit;
 };
-getRandomLimit(1, 8);
-console.log(valueRandomLimit);
+
+var numberRandomUniq; // случайное значение
+var arr = []; // массив для заполнения вычисленными случайными значениями
+
+/* Функция для вычисления уникального случайного числа по макс. длине массива */
+var getRandomUniq = function(valueOfArr) {
+
+while(arr.length <= valueOfArr.length) {
+    numberRandomUniq = Math.round(Math.random() * valueOfArr.length);
+
+    if(arr.indexOf(numberRandomUniq) == -1) { // если случайное значение не содержится в массиве, то
+      arr.push(numberRandomUniq); // положить его в массив
+    }
+
+  }
+  return arr;
+};
+
+var titleOfAdverts = getRandomUniq(arrOfTitle);
+
+var array = [];
+var numberRandomUniqLimit;
+/* Функция для вычисления уникального случайного числа в интервале чисел */
+var getRandomUniqLimit = function(min, max) {
+
+  while(array.length < max) {
+    numberRandomUniqLimit = (Math.round(Math.random() * (max - min) + min));
+
+    if(array.indexOf(numberRandomUniqLimit) == -1) {
+      array.push(numberRandomUniqLimit);
+    }
+
+  }
+  return array;
+};
+
+var authorAvatars = getRandomUniqLimit(minNumberImg, maxNumberImg);
+
+var dataOfAdverts = [
+  {
+    author: {
+      avatar: authorAvatars[0]
+    },
+    offer: {
+      title: arrOfTitle[titleOfAdverts[0]],
+      price: getRandomLimit(minPrice, maxPrice),
+      type:  arrOfType[getRandomLimit(0, arrOfType.length-1)],
+      rooms: getRandomLimit(minRooms, maxRooms),
+      checkin: arrOfCheckin[getRandomLimit(0, arrOfCheckin.length-1)],
+      checkout: arrOfCheckOut[getRandomLimit(0, arrOfCheckOut.length-1)],
+      description: '',
+      photos: []
+    },
+
+  },
+  {
+    author: {
+      avatar: authorAvatars[1]
+    },
+    offer: {
+      title: arrOfTitle[titleOfAdverts[1]],
+      price:  getRandomLimit(minPrice, maxPrice),
+      type:  arrOfType[getRandomLimit(0, arrOfType.length-1)],
+      rooms: getRandomLimit(minRooms, maxRooms),
+      checkin: arrOfCheckin[getRandomLimit(0, arrOfCheckin.length-1)],
+      checkout: arrOfCheckOut[getRandomLimit(0, arrOfCheckOut.length-1)],
+      description: '',
+      photos: []
+    },
+
+  },
+  {
+    author: {
+      avatar: authorAvatars[2]
+    },
+    offer: {
+      title: arrOfTitle[titleOfAdverts[2]],
+      price:  getRandomLimit(minPrice, maxPrice),
+      type:  arrOfType[getRandomLimit(0, arrOfType.length-1)],
+      rooms: getRandomLimit(minRooms, maxRooms),
+      checkin: arrOfCheckin[getRandomLimit(0, arrOfCheckin.length-1)],
+      checkout: arrOfCheckOut[getRandomLimit(0, arrOfCheckOut.length-1)],
+      description: '',
+      photos: []
+    },
+
+  },
+  {
+    author: {
+      avatar: authorAvatars[3]
+    },
+    offer: {
+      title: arrOfTitle[titleOfAdverts[3]],
+      price:  getRandomLimit(minPrice, maxPrice),
+      type:  arrOfType[getRandomLimit(0, arrOfType.length-1)],
+      rooms: getRandomLimit(minRooms, maxRooms),
+      checkin: arrOfCheckin[getRandomLimit(0, arrOfCheckin.length-1)],
+      checkout: arrOfCheckOut[getRandomLimit(0, arrOfCheckOut.length-1)],
+      description: '',
+      photos: []
+    },
+
+  },
+  {
+    author: {
+      avatar: authorAvatars[4]
+    },
+    offer: {
+      title: arrOfTitle[titleOfAdverts[4]],
+      price: getRandomLimit(minPrice, maxPrice),
+      type:  arrOfType[getRandomLimit(0, arrOfType.length-1)],
+      rooms: getRandomLimit(minRooms, maxRooms),
+      checkin: arrOfCheckin[getRandomLimit(0, arrOfCheckin.length-1)],
+      checkout: arrOfCheckOut[getRandomLimit(0, arrOfCheckOut.length-1)],
+      description: '',
+      photos: []
+    },
+
+  },
+  {
+    author: {
+      avatar: authorAvatars[5]
+    },
+    offer: {
+      title: arrOfTitle[titleOfAdverts[5]],
+      price: getRandomLimit(minPrice, maxPrice),
+      type:  arrOfType[getRandomLimit(0, arrOfType.length-1)],
+      rooms: getRandomLimit(minRooms, maxRooms),
+      checkin: arrOfCheckin[getRandomLimit(0, arrOfCheckin.length-1)],
+      checkout: arrOfCheckOut[getRandomLimit(0, arrOfCheckOut.length-1)],
+      description: '',
+      photos: []
+    },
+
+  },
+  {
+    author: {
+      avatar: authorAvatars[6]
+    },
+    offer: {
+      title: arrOfTitle[titleOfAdverts[6]],
+      price: getRandomLimit(minPrice, maxPrice),
+      type:  arrOfType[getRandomLimit(0, arrOfType.length-1)],
+      rooms: getRandomLimit(minRooms, maxRooms),
+      checkin: arrOfCheckin[getRandomLimit(0, arrOfCheckin.length-1)],
+      checkout: arrOfCheckOut[getRandomLimit(0, arrOfCheckOut.length-1)],
+      description: '',
+      photos: []
+    },
+
+  },
+  {
+    author: {
+      avatar: authorAvatars[7]
+    },
+    offer: {
+      title: arrOfTitle[titleOfAdverts[7]],
+      price: getRandomLimit(minPrice, maxPrice),
+      type:  arrOfType[getRandomLimit(0, arrOfType.length-1)],
+      rooms: getRandomLimit(minRooms, maxRooms),
+      checkin: arrOfCheckin[getRandomLimit(0, arrOfCheckin.length-1)],
+      checkout: arrOfCheckOut[getRandomLimit(0, arrOfCheckOut.length-1)],
+      description: '',
+      photos: []
+    },
+
+  }
+];
+console.log(dataOfAdverts[0].offer.photos);
+    // Вопрос
+    // location и адрес
+// guests в каком интервале искать
