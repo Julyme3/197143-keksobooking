@@ -167,6 +167,7 @@ var pinMap = document.querySelector('.tokyo__pin-map')
 var pins = pinMap.querySelectorAll('.pin');
 var dialogBlock = document.querySelector('.dialog');
 var dialogClose = dialogBlock.querySelector('.dialog__close');
+var iconUser = pinMap.querySelectorAll('.rounded');
 var ENTER_KEY_CODE = 13;
 var ESC_KEY_CODE = 27;
 
@@ -213,6 +214,7 @@ pinMap.addEventListener('click', function (evt) {
   }
 
   dialogBlock.classList.remove('hidden');
+  document.addEventListener('keydown', popupEscHandlier);
 });
 
 // всем пинам добавляем tabindex
