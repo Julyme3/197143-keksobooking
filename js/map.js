@@ -163,7 +163,9 @@ renderDialog(notices[0]);
 
 // Переменные для событий
 
-var pinMap = document.querySelector('.tokyo__pin-map')
+var pinMap = document.querySelector('.tokyo__pin-map');
+var pinMain = document.querySelector('.pin__main');
+pinMap.removeChild(pinMain);
 var pins = pinMap.querySelectorAll('.pin');
 var dialogBlock = document.querySelector('.dialog');
 var dialogClose = dialogBlock.querySelector('.dialog__close');
@@ -179,11 +181,7 @@ var popupEscHandlier = function (evt) {
 
 var openPopup = function () {
   dialogBlock.classList.remove('hidden');
-  pin.classList.add('pin--active');
-
-// закрываем попап нажатием Esc на документе
   document.addEventListener('keydown', popupEscHandlier);
-
 };
 
 var closePopup = function () {
@@ -202,19 +200,20 @@ pinMap.addEventListener('click', function (evt) {
   var target = evt.target;
 
   // если уже есть класс active - удаляем
-  for (i = 0; i < pins.length; i++) {
+  for (i = 0; i < pins.length - 1; i++) {
     var pin = pins[i];
     if (pin.classList.contains('pin--active')) {
       pin.classList.remove('pin--active');
     }
   }
-
-  if (target.classList.contains('pin')) {
+  
+  if (target.tagName === 'IMG') {
+    evt.target.parentElement.classList.add('pin--active');
+  } else if (target.classList.contains('pin')) {
     target.classList.add('pin--active');
   }
 
-  dialogBlock.classList.remove('hidden');
-  document.addEventListener('keydown', popupEscHandlier);
+  openPopup();
 });
 
 // всем пинам добавляем tabindex
@@ -227,6 +226,7 @@ for (i = 0; i < pins.length; i++) {
 pinMap.addEventListener('keydown', function (evt) {
   if (evt.target.classList.contains('pin') && evt.keyCode === ENTER_KEY_CODE) {
     openPopup();
+    evt.target.classList.add('pin--active');
   }
 });
 
