@@ -141,15 +141,18 @@ var similarNoticeTemplate = document.querySelector('#lodge-template');
 var similarListNotice = document.querySelector('#offer-dialog');
 var dialogPanel = document.querySelector('.dialog__panel');
 var ImgAuthor = document.querySelector('.dialog__title');
+var noticeElement = similarNoticeTemplate.content.cloneNode(true);
 var renderDialog = function (notice) {
 
   similarListNotice.removeChild(dialogPanel);
 
-  var noticeElement = similarNoticeTemplate.content.cloneNode(true);
+//  var noticeElement = similarNoticeTemplate.content.cloneNode(true);
 
   noticeElement.querySelector('.lodge__title').textContent = notice.offer.title;
   noticeElement.querySelector('.lodge__address').textContent = notice.offer.address;
   noticeElement.querySelector('.lodge__price').innerHTML = notice.offer.price + '&#x20bd;/ночь';
+  noticeElement.querySelector('.lodge__price').setAttribute('required', true); // обязательно для заполнения
+  noticeElement.querySelector('.lodge__price').setAttribute('pattern', '^[ 0-9]+$'); // любое число
   noticeElement.querySelector('.lodge__type').textContent = notice.offer.type;
   noticeElement.querySelector('.lodge__rooms-and-guests').textContent = 'Для ' + notices[0].offer.guests + ' гостей в ' + notice.offer.rooms + ' комнатах';
   noticeElement.querySelector('.lodge__checkin-time').textContent = 'Заезд после ' + notices[0].offer.checkin + ' , выезд до ' + notice.offer.checkout;
@@ -169,7 +172,6 @@ pinMap.removeChild(pinMain);
 var pins = pinMap.querySelectorAll('.pin');
 var dialogBlock = document.querySelector('.dialog');
 var dialogClose = dialogBlock.querySelector('.dialog__close');
-var iconUser = pinMap.querySelectorAll('.rounded');
 var ENTER_KEY_CODE = 13;
 var ESC_KEY_CODE = 27;
 
@@ -200,13 +202,13 @@ pinMap.addEventListener('click', function (evt) {
   var target = evt.target;
 
   // если уже есть класс active - удаляем
-  for (i = 0; i < pins.length - 1; i++) {
+  for (i = 0; i < pins.length; i++) {
     var pin = pins[i];
     if (pin.classList.contains('pin--active')) {
       pin.classList.remove('pin--active');
     }
   }
-  
+
   if (target.tagName === 'IMG') {
     evt.target.parentElement.classList.add('pin--active');
   } else if (target.classList.contains('pin')) {
@@ -240,4 +242,88 @@ dialogClose.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEY_CODE) {
     closePopup();
   }
+});
+
+// Проверка введенных данных формы
+var form = document.querySelector('.notice__form');
+var titleForm = form.querySelector('#title');
+var priceForm = form.querySelector('#price');
+var timeIn = form.querySelector('#time');
+var timeOut = form.querySelector('#timeout');
+var typeOfHousing = form.querySelector('#type');
+var room = form.querySelector('#room_number');
+var guest = form.querySelector('#capacity');
+var inputs = form.querySelectorAll('input');
+var submit = form.querySelector('.form__submit');
+
+titleForm.setAttribute('required', true); // обязательно для заполнения
+titleForm.setAttribute('minlength', 30); // минимальная длина
+titleForm.setAttribute('maxlength', 100); // максимальная длина
+priceForm.setAttribute('required', true); // обязательно для заполнения
+priceForm.setAttribute('min', 1000); // минимальное значение
+priceForm.setAttribute('max', 1000000); // максимальное значение
+priceForm.setAttribute('value', 1000); // значение по умолчанию
+
+// Синхронизируем значение поля время выезда в зависимости от установки поля времени въезда
+timeIn.addEventListener('change', function (evt) {
+  if (evt.target.value === timeIn.options[0].value) {
+    timeOut.selectedIndex = 0; // выбранный option
+  } else if (evt.target.value === timeIn.options[1].value) {
+    timeOut.selectedIndex = 1;
+  } else {
+    timeOut.selectedIndex = 2;
+  }
+});
+
+ // Синхронизируем значение поля время въезда в зависимости от установки поля времени выезда
+timeOut.addEventListener('change', function (evt) {
+  if (evt.target.value === timeOut.options[0].value) {
+    timeIn.selectedIndex = 0;
+  } else if (evt.target.value === timeOut.options[1].value) {
+    timeIn.selectedIndex = 1;
+  } else {
+    timeIn.selectedIndex = 2;
+  }
+});
+
+// Корректируем минимальную цену в зависимости от установки в поле "Тип жилья"
+typeOfHousing.addEventListener('change', function (evt) {
+  if (evt.target.value === typeOfHousing.options[0].value) {
+    priceForm.value = 1000;
+  } else if (evt.target.value === typeOfHousing.options[1].value) {
+    priceForm.value = 0;
+  } else {
+    priceForm.value = 10000;
+  }
+});
+
+// Корректируем значение в поле "Кол-во гостей" от установки в поле "Кол-во комнат"
+room.addEventListener('change', function (evt) {
+  if (evt.target.value === room.options[1].value || evt.target.value === room.options[2].value) {
+    guest.selectedIndex = 0;
+  } else {
+    guest.selectedIndex = 1;
+  }
+});
+
+// Корректируем значение в поле "Кол-во комнат" от установки в поле "Кол-во гостей"
+guest.addEventListener('change', function (evt) {
+  if (evt.target.value === guest.options[1].value) {
+    room.selectedIndex = 0;
+  } else {
+    room.selectedIndex = 1 || 2;
+  }
+});
+
+ // Обводим невалидные поля красной рамкой
+submit.addEventListener('click', function (evt) {
+  evt.preventDefault();
+
+  for (i = 0; i < inputs.length; i++) { // проходим по всем полям
+    var input = inputs[i];
+    if (input.checkValidity() === false) { // если проверку не прошло, тогда...
+      input.style.border = '2px solid red';
+    }
+  }
+  
 });
