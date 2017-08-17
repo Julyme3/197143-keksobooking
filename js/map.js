@@ -321,9 +321,13 @@ submit.addEventListener('click', function (evt) {
 
   for (i = 0; i < inputs.length; i++) { // проходим по всем полям
     var input = inputs[i];
+    input.style.border = "none";
     if (input.checkValidity() === false) { // если проверку не прошло, тогда...
       input.style.border = '2px solid red';
     }
   }
+  
+  // сбрасываем введенные значения в поля формы form
+  form.reset();
   
 });
