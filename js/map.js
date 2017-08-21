@@ -264,26 +264,21 @@ priceForm.setAttribute('min', 1000); // минимальное значение
 priceForm.setAttribute('max', 1000000); // максимальное значение
 priceForm.setAttribute('value', 1000); // значение по умолчанию
 
+// функция меняет значение поля2 (input2)  в зависимости от текущего значения поля1 (input1)
+var changeSelectValue = function (input1, input2) {
+  var selected = input1.value;
+  input2.value = selected;
+};
+
 // Синхронизируем значение поля время выезда в зависимости от установки поля времени въезда
+// Событие change происходит по окончании изменении значения элемента формы, когда это изменение зафиксировано.
 timeIn.addEventListener('change', function (evt) {
-  if (evt.target.value === timeIn.options[0].value) {
-    timeOut.selectedIndex = 0; // выбранный option
-  } else if (evt.target.value === timeIn.options[1].value) {
-    timeOut.selectedIndex = 1;
-  } else {
-    timeOut.selectedIndex = 2;
-  }
+  changeSelectValue(evt.target, timeOut);
 });
 
  // Синхронизируем значение поля время въезда в зависимости от установки поля времени выезда
 timeOut.addEventListener('change', function (evt) {
-  if (evt.target.value === timeOut.options[0].value) {
-    timeIn.selectedIndex = 0;
-  } else if (evt.target.value === timeOut.options[1].value) {
-    timeIn.selectedIndex = 1;
-  } else {
-    timeIn.selectedIndex = 2;
-  }
+  changeSelectValue(evt.target, timeIn);
 });
 
 // Корректируем минимальную цену в зависимости от установки в поле "Тип жилья"
@@ -295,39 +290,45 @@ typeOfHousing.addEventListener('change', function (evt) {
   } else {
     priceForm.value = 10000;
   }
+
 });
 
 // Корректируем значение в поле "Кол-во гостей" от установки в поле "Кол-во комнат"
 room.addEventListener('change', function (evt) {
-  if (evt.target.value === room.options[1].value || evt.target.value === room.options[2].value) {
-    guest.selectedIndex = 0;
-  } else {
-    guest.selectedIndex = 1;
-  }
+  changeSelectValue(evt.target, guest);
 });
 
 // Корректируем значение в поле "Кол-во комнат" от установки в поле "Кол-во гостей"
 guest.addEventListener('change', function (evt) {
-  if (evt.target.value === guest.options[1].value) {
-    room.selectedIndex = 0;
-  } else {
-    room.selectedIndex = 1 || 2;
-  }
+  changeSelectValue(evt.target, room);
 });
 
  // Обводим невалидные поля красной рамкой
 submit.addEventListener('click', function (evt) {
   evt.preventDefault();
+  var isValid = true;
 
   for (i = 0; i < inputs.length; i++) { // проходим по всем полям
     var input = inputs[i];
     input.style.border = "none";
     if (input.checkValidity() === false) { // если проверку не прошло, тогда...
-      input.style.border = '2px solid red';
+      isValid = false;
+      input.style.border = '2px solid green';
     }
   }
-  
-  // сбрасываем введенные значения в поля формы form
-  form.reset();
-  
+
+  if (isValid) {
+    form.submit();
+    // сбрасываем введенные значения в поля формы form
+    form.reset();
+  }
+
 });
+
+// убираем обводку полей в момент введения данных
+for (var i = 0; i < inputs.length; i++) {
+  var input = inputs[i];
+  input.addEventListener('input', function (evt) {
+    evt.target.style.border = "none";
+  });
+};
